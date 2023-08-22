@@ -46,15 +46,26 @@ class NeuralNetwork {
     return { outputErrors, hiddenErrors };
   }
 
+  gradientDescentOutput(hidden, gradients) {
+    let hiddenT = math.transpose(hidden);
+    let weight_ho_deltas = math.multiply(gradients, hiddenT);
+    this.weights_ho = math.add(this.weights_ho, weight_ho_deltas);
+    this.bias_o = math.add(this.bias_o, gradients);
+  }
+
+  gradientDescentHidden(inputs, hiddenGradient) {
+    let inputsT = math.transpose(inputs);
+    let weight_ih_deltas = math.multiply(hiddenGradient, inputsT);
+    this.weights_ih = math.add(this.weights_ih, weight_ih_deltas);
+    this.bias_h = math.add(this.bias_h, hiddenGradient);
+  }
+
   backwardPropagationOutput(hidden, outputs, outputErrors) {
     let gradients = math.map(outputs, this.dsigmoid);
     gradients = math.dotMultiply(gradients, outputErrors);
     gradients = math.multiply(gradients, this.learningRate);
 
-    let hiddenT = math.transpose(hidden);
-    let weight_ho_deltas = math.multiply(gradients, hiddenT);
-    this.weights_ho = math.add(this.weights_ho, weight_ho_deltas);
-    this.bias_o = math.add(this.bias_o, gradients);
+    this.gradientDescentOutput(hidden, gradients);
   }
 
   backwardPropagationHidden(inputs, hidden, hiddenErrors) {
@@ -62,10 +73,7 @@ class NeuralNetwork {
     hiddenGradient = math.dotMultiply(hiddenGradient, hiddenErrors);
     hiddenGradient = math.multiply(hiddenGradient, this.learningRate);
 
-    let inputsT = math.transpose(inputs);
-    let weight_ih_deltas = math.multiply(hiddenGradient, inputsT);
-    this.weights_ih = math.add(this.weights_ih, weight_ih_deltas);
-    this.bias_h = math.add(this.bias_h, hiddenGradient);
+    this.gradientDescentHidden(inputs, hiddenGradient);
   }
 
   train(inputArray, targetArray) {
