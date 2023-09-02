@@ -33,7 +33,7 @@ const training_data = [
   { input: [0.7, 0.15, 0.7, 0], target: categories[3][1] },
 ];
 
-nn.loadFromFile("neural_network_state.json");
+nn.loadFromFile("basicCategorizationState.json");
 
 // Train the neural network
 // const epochs = 20000;
@@ -80,4 +80,4 @@ newDescriptions.forEach((newDescription, i) => {
   );
 });
 
-// nn.saveToFile("neural_network_state2.json");
+// nn.saveToFile("basicCategorizationState2.json");
